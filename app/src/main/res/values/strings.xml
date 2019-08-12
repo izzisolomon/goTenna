@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Go Tenna</string>
-    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_maps">GoTenna</string>
     <string name="mapbox_access_token">pk.eyJ1IjoiaXp6aXNvbG8iLCJhIjoiY2p6NW91c3N5MDgwYzNpcXFyYWc1OHByaiJ9.3YHm3AiZEzptyuehC2e5cg</string>
     <string name="location_denied">Location tracking denied</string>
     <string name="map_not_ready">Please wait for the map to finish loading</string>

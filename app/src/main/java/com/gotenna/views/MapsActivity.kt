@@ -10,6 +10,7 @@ import com.gotenna.controllers.LocationPermissionController
 import com.gotenna.controllers.MapController
 import com.gotenna.R
 import com.gotenna.controllers.LocationsAdapter
+import com.gotenna.controllers.SettingsController
 import com.gotenna.data.MarkerObject
 import com.gotenna.models.DataManger
 import com.mapbox.mapboxsdk.Mapbox
@@ -25,7 +26,7 @@ class MapsActivity : AppCompatActivity(), LocationPermissionController.LocationP
     private lateinit var mapController: MapController
     private lateinit var locationsAdapter: LocationsAdapter
     private lateinit var markersList: RecyclerView
-    private lateinit var menu : PopupMenu
+    private lateinit var settingsController: SettingsController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,14 +34,12 @@ class MapsActivity : AppCompatActivity(), LocationPermissionController.LocationP
         Mapbox.getInstance(this, resources.getString(R.string.mapbox_access_token))
         setContentView(R.layout.activity_maps)
 
-        setupSettingsMenu()
         markersList = markers_list
         val mapView = findViewById<MapView>(R.id.mapView)
         mapView.onCreate(savedInstanceState)
         mapController = MapController(this, mapView)
+        settingsController = SettingsController(this, map_settings, mapController)
         locationPermissionController = LocationPermissionController(this)
-
-        mapController.setupMap()
 
         my_location.setOnClickListener {
             if (::mapController.isInitialized) mapController.showLocation()
@@ -69,49 +68,20 @@ class MapsActivity : AppCompatActivity(), LocationPermissionController.LocationP
         // because the location marker requires the map style as a param
 
         locationPermissionController.checkLocationPermission()
+        map_settings.setOnClickListener {
+            settingsController.show()
+        }
     }
 
     override fun handleDataReady(markers: List<MarkerObject>) {
         mapController.setupMarkers(markers)
         markersList.layoutManager = LinearLayoutManager(this)
         locationsAdapter = LocationsAdapter(this, markers, markers_list, this)
-        map_settings.setOnClickListener {
-            menu.show()
-        }
         markersList.adapter = locationsAdapter
     }
 
     override fun onItemClick(item: MarkerObject) {
         mapController.goToPosition(item)
-    }
-
-    private fun setupSettingsMenu() {
-        menu = PopupMenu(this, map_settings)
-        menu.inflate(R.menu.map_style_menu)
-        menu.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.satellite -> {
-                    it.isChecked = true
-                    mapController.changeMapStyle(Style.SATELLITE)
-                    true
-                }
-                R.id.light -> {
-                    mapController.changeMapStyle(Style.LIGHT)
-                    it.isChecked = true
-                    true
-                }
-                R.id.dark -> {
-                    mapController.changeMapStyle(Style.DARK)
-                    it.isChecked = true
-                    true
-                }
-                else -> {
-                    mapController.changeMapStyle(Style.MAPBOX_STREETS)
-                    it.isChecked = true
-                    true
-                }
-            }
-        }
     }
 
 }

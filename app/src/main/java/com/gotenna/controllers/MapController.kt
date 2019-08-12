@@ -34,25 +34,30 @@ class MapController(private val mapsActivity: MapsActivity, private val mapView:
     private lateinit var mapboxMap: MapboxMap
     private lateinit var dataManager: DataManger
 
+    init {
+        setupMap()
+    }
+
     fun showLocation() {
         val locationComponentActivationOptions = LocationComponentActivationOptions
             .builder(mapsActivity, mapboxMap.style!!)
             .build()
 
-        val locationComponent = mapboxMap.locationComponent
-        locationComponent.activateLocationComponent(locationComponentActivationOptions)
         try {
+            val locationComponent = mapboxMap.locationComponent
+            locationComponent.activateLocationComponent(locationComponentActivationOptions)
             locationComponent.isLocationComponentEnabled = true
+            locationComponent.cameraMode = CameraMode.TRACKING
+            locationComponent.renderMode = RenderMode.COMPASS
+            locationComponent.zoomWhileTracking(17.0)
         } catch (e: SecurityException) {
             Toast.makeText(mapsActivity, mapsActivity.resources.getString(R.string.location_denied), Toast.LENGTH_LONG).show()
         }
-        locationComponent.cameraMode = CameraMode.TRACKING
-        locationComponent.renderMode = RenderMode.COMPASS
-        locationComponent.zoomWhileTracking(17.0)
+
     }
 
 
-    fun setupMap() {
+    private fun setupMap() {
         mapView.getMapAsync(this)
         dataManager = DataManger(mapsActivity)
     }
