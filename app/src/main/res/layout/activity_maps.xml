@@ -1,14 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:id="@+id/map"
-          tools:context=".views.MapsActivity">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/map"
+                tools:context=".views.MapsActivity">
 
-    <com.mapbox.mapboxsdk.maps.MapView
-            android:id="@+id/mapView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+    <LinearLayout android:orientation="vertical"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent">
+
+        <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+            <com.mapbox.mapboxsdk.maps.MapView
+                    android:id="@+id/mapView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+            />
+
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:background="@android:color/transparent"
+                    android:layout_gravity="bottom|end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+
+                <android.support.design.widget.FloatingActionButton
+                        android:id="@+id/map_settings"
+                        android:src="@drawable/baseline_settings_white_18"
+                        android:layout_margin="15dp"
+                        android:scaleType="fitCenter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                <android.support.design.widget.FloatingActionButton
+                        android:id="@+id/my_location"
+                        android:src="@drawable/baseline_my_location_white_24"
+                        android:layout_margin="15dp"
+                        android:layout_gravity="bottom|end"
+                        android:scaleType="fitCenter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+
+        </FrameLayout>
+
+        <android.support.v7.widget.RecyclerView
+                android:id="@+id/markers_list"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"/>
+
+    </LinearLayout>
+
 
 </RelativeLayout>
