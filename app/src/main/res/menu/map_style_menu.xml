@@ -2,29 +2,27 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <group android:checkableBehavior="single">
     <item
-            android:id="@+id/menu_item_edit"
-            android:icon="@drawable/baseline_settings_white_18"
-            android:title="@string/map_menu"
-            app:showAsAction="ifRoom">
+            android:id="@+id/title"
+            android:checkable="false"
+            android:title="@string/map_menu"/>
 
-        <menu>
-            <group android:checkableBehavior="single">
-                <item
-                        android:id="@+id/title"
-                        android:checkable="false"
-                        android:title="@string/map_menu"/>
+    <item
+            android:checked="true"
+            android:id="@+id/streets"
+            android:title="Street"/>
 
-                <item
-                        android:checked="true"
-                        android:id="@+id/large"
-                        android:title="" />
+    <item
+            android:id="@+id/light"
+            android:title="Light"/>
 
-                <item
-                        android:id="@+id/medium"
-                        android:title="" />
+    <item
+            android:id="@+id/dark"
+            android:title="Dark"/>
 
-            </group>
-        </menu>
-    </item>
+    <item
+            android:id="@+id/satellite"
+            android:title="Satellite"/>
+    </group>
 </menu>

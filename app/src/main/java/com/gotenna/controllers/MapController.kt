@@ -1,5 +1,10 @@
 package com.gotenna.controllers
 
+import android.graphics.Color
+import android.view.LayoutInflater
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.widget.LinearLayout
+import android.widget.TextView
 import com.gotenna.data.MarkerObject
 import com.gotenna.views.MapsActivity
 import com.mapbox.mapboxsdk.geometry.LatLng
@@ -15,6 +20,13 @@ import com.mapbox.mapboxsdk.plugins.annotation.CircleOptions
 import android.widget.Toast
 import com.gotenna.R
 import com.gotenna.models.DataManger
+import com.mapbox.mapboxsdk.camera.CameraPosition
+import com.mapbox.mapboxsdk.geometry.LatLngBounds
+import com.mapbox.mapboxsdk.plugins.annotation.LineManager
+import com.mapbox.mapboxsdk.plugins.annotation.LineOptions
+import com.mapbox.mapboxsdk.plugins.markerview.MarkerView
+import com.mapbox.mapboxsdk.plugins.markerview.MarkerViewManager
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory
 
 
 class MapController(private val mapsActivity: MapsActivity, private val mapView: MapView) : OnMapReadyCallback {
@@ -36,7 +48,7 @@ class MapController(private val mapsActivity: MapsActivity, private val mapView:
         }
         locationComponent.cameraMode = CameraMode.TRACKING
         locationComponent.renderMode = RenderMode.COMPASS
-        locationComponent.zoomWhileTracking(10.0)
+        locationComponent.zoomWhileTracking(17.0)
     }
 
 
@@ -45,23 +57,33 @@ class MapController(private val mapsActivity: MapsActivity, private val mapView:
         dataManager = DataManger(mapsActivity)
     }
 
-    fun chngeMapStyle(style: String) {
+    fun changeMapStyle(style: String) {
         mapboxMap.setStyle(style)
     }
 
     fun setupMarkers(markers: List<MarkerObject>) {
-        val circleManager = CircleManager(mapView, mapboxMap, mapboxMap.style!!)
-        val circleOptionsList = ArrayList<CircleOptions>()
+        val markerViewManager = MarkerViewManager(mapView, mapboxMap)
 
         for (marker: MarkerObject in markers) {
-            circleOptionsList.add(
-                CircleOptions()
-                    .withLatLng(LatLng(marker.latitude, marker.longitude))
-                    .withCircleRadius(8f)
-                    .withDraggable(true)
-            )
+            val view = LayoutInflater.from(mapsActivity).inflate(R.layout.marker_view, null) as LinearLayout
+            view.layoutParams = LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT)
+            view.setOnClickListener {
+                mapsActivity.setSelected(marker)
+            }
+            val marker = MarkerView(LatLng(marker.latitude, marker.longitude), view)
+            marker.let {
+                markerViewManager.addMarker(it)
+            }
         }
-        circleManager.create(circleOptionsList)
+    }
+
+    fun goToPosition(marker : MarkerObject) {
+        val position = CameraPosition.Builder()
+            .target(LatLng(marker.latitude, marker.longitude))
+            .zoom(17.0)
+            .build()
+
+        mapboxMap.cameraPosition = position
     }
 
     override fun onMapReady(map: MapboxMap) {
